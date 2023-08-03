@@ -8,31 +8,35 @@ async function handler(
   res: NextApiResponse<ResponseType>
 ) {
   const {
-    body: { name, price, description },
+    query: { id },
     session: { user },
+    body: { answer },
   } = req;
-  const product = await client.product.create({
+
+  const newAnswer = await client.answer.create({
     data: {
-      name,
-      price: +price,
-      description,
-      image: "xx",
       user: {
         connect: {
           id: user?.id,
         },
       },
+      post: {
+        connect: {
+          id: +id!.toString(),
+        },
+      },
+      answer,
     },
   });
   res.json({
     ok: true,
-    product,
+    answer: newAnswer,
   });
 }
 
 export default withApiSession(
   withHandler({
-    method: "POST",
+    methods: ["POST"],
     handler,
   })
 );
