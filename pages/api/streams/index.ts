@@ -2,36 +2,21 @@ import { NextApiRequest, NextApiResponse } from "next";
 import withHandler, { ResponseType } from "@/libs/server/withHandler";
 import client from "@/libs/server/client";
 import { withApiSession } from "@/libs/server/withSession";
+
 async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseType>
 ) {
-  if (req.method === "GET") {
-    const products = await client.product.findMany({
-      include: {
-        _count: {
-          select: {
-            favs: true,
-          },
-        },
-      },
-    });
-    res.json({
-      ok: true,
-      products,
-    });
-  }
+  const {
+    session: { user },
+    body: { name, price, description },
+  } = req;
   if (req.method === "POST") {
-    const {
-      body: { name, price, description, photoId },
-      session: { user },
-    } = req;
-    const product = await client.product.create({
+    const stream = await client.stream.create({
       data: {
         name,
-        price: +price,
+        price,
         description,
-        image: photoId,
         user: {
           connect: {
             id: user?.id,
@@ -39,10 +24,13 @@ async function handler(
         },
       },
     });
-    res.json({
-      ok: true,
-      product,
+    res.json({ ok: true, stream });
+  } else if (req.method === "GET") {
+    const streams = await client.stream.findMany({
+      take: 10,
+      skip: 20,
     });
+    res.json({ ok: true, streams });
   }
 }
 
