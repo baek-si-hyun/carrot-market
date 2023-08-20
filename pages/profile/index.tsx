@@ -14,6 +14,7 @@ interface ReviewsResponse {
 }
 const Profile: NextPage = () => {
   const { user } = useUser();
+
   const { data } = useSWR<ReviewsResponse>("/api/reviews");
   return (
     <Layout hasTabBar title="나의 캐럿">
@@ -21,7 +22,7 @@ const Profile: NextPage = () => {
         <div className="flex items-center mt-4 space-x-3">
           {user?.avatar ? (
             <img
-              src={`https://imagedelivery.net/CLOUDFLARE IMAGES/${user?.avatar}/avatar`}
+              src={`https://imagedelivery.net/4aEUbX05h6IovGOQjgkfSw/${user?.avatar}/avatar`}
               className="w-16 h-16 rounded-full bg-slate-500"
             />
           ) : (

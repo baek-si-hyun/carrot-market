@@ -20,9 +20,7 @@ interface ItemDetailResponse {
 }
 
 const ItemDetail: NextPage = () => {
-  const { user, isLoading } = useUser();
   const router = useRouter();
-  const { mutate } = useSWRConfig();
   const { data, mutate: boundMutate } = useSWR<ItemDetailResponse>(
     router.query.id ? `/api/products/${router.query.id}` : null
   );
@@ -37,12 +35,12 @@ const ItemDetail: NextPage = () => {
       <div className="px-4 py-4">
         <div className="mb-8">
           <img
-            src={`https://imagedelivery.net/aSbksvJjax-AUC7qVnaC4A/${data?.product.image}/public`}
+            src={`https://imagedelivery.net/4aEUbX05h6IovGOQjgkfSw/${data?.product.image}/public`}
             className="h-96 bg-slate-300"
           />
           <div className="flex items-center py-3 space-x-3 border-t border-b cursor-pointer">
             <img
-              src={`https://imagedelivery.net/aSbksvJjax-AUC7qVnaC4A/${data?.product?.user?.avatar}/avatar`}
+              src={`https://imagedelivery.net/4aEUbX05h6IovGOQjgkfSw/${data?.product?.user?.avatar}/avatar`}
               className="w-12 h-12 rounded-full bg-slate-300"
             />
             <div>

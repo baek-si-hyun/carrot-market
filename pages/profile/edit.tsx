@@ -30,13 +30,14 @@ const EditProfile: NextPage = () => {
     formState: { errors },
     watch,
   } = useForm<EditProfileForm>();
+  const [avatarPreview, setAvatarPreview] = useState("");
   useEffect(() => {
     if (user?.name) setValue("name", user.name);
     if (user?.email) setValue("email", user.email);
     if (user?.phone) setValue("phone", user.phone);
     if (user?.avatar)
       setAvatarPreview(
-        `https://imagedelivery.net/CLOUDFLARE IMAGES/${user?.avatar}/avatar`
+        `https://imagedelivery.net/4aEUbX05h6IovGOQjgkfSw/${user?.avatar}/avatar`
       );
   }, [user, setValue]);
   const [editProfile, { data, loading }] = useMutation<EditProfileResponse>(
@@ -80,7 +81,7 @@ const EditProfile: NextPage = () => {
       setError("formErrors", { message: data.error });
     }
   }, [data, setError]);
-  const [avatarPreview, setAvatarPreview] = useState("");
+
   const avatar = watch("avatar");
   useEffect(() => {
     if (avatar && avatar.length > 0) {
