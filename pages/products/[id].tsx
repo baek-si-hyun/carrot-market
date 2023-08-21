@@ -115,7 +115,7 @@ const ItemDetail: NextPage = () => {
               <div key={product.id}>
                 <img
                   src={`https://imagedelivery.net/4aEUbX05h6IovGOQjgkfSw/${product.image}/public`}
-                  className="h-96 bg-slate-300"
+                  className="w-full h-56 mb-4 bg-slate-300"
                 />
                 <h3 className="-mb-1 text-gray-700">{product.name}</h3>
                 <span className="text-sm font-medium text-gray-900">
