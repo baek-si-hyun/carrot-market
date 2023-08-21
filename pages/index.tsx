@@ -6,6 +6,8 @@ import useUser from "@/libs/client/useUser";
 import Head from "next/head";
 import useSWR from "swr";
 import { Product } from "@prisma/client";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
 
 export interface ProductWithCount extends Product {
   _count: {
@@ -19,6 +21,13 @@ interface ProductsResponse {
 const Home: NextPage = () => {
   const { user, isLoading } = useUser();
   const { data } = useSWR<ProductsResponse>("/api/products");
+  console.log(user);
+  const router = useRouter();
+  useEffect(() => {
+    if (!isLoading && !user) {
+      router.push("/enter"); // Redirect to /enter if user is not available
+    }
+  }, [isLoading, user, router]);
   return (
     <Layout title="홈" hasTabBar>
       <Head>
