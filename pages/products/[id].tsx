@@ -7,7 +7,6 @@ import Link from "next/link";
 import { Product, User } from "@prisma/client";
 import useMutation from "@/libs/client/useMutation";
 import { cls } from "@/libs/client/utils";
-import useUser from "@/libs/client/useUser";
 
 interface ProductWithUser extends Product {
   user: User;
