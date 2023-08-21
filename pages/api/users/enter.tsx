@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import client from "@/libs/server/client";
 import withHandler, { ResponseType } from "@/libs/server/withHandler";
+import client from "@/libs/server/client";
 
 async function handler(
   req: NextApiRequest,
@@ -26,10 +26,11 @@ async function handler(
       },
     },
   });
-  // if (phone) {
-  // } else if (email) {
-  // }
-  return res.json({ ok: true });
+  if (phone) 
+  if (email)   
+  return res.json({
+    ok: true,
+  });
 }
 
 export default withHandler({ methods: ["POST"], handler, isPrivate: false });

@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Button from "@/components/button";
 import Input from "@/components/input";
@@ -21,17 +21,13 @@ interface MutationResult {
 }
 
 const Enter: NextPage = () => {
-  const [enter, { loading, data, error }] = useMutation<MutationResult>(
-    "/api/users/enter"
-  );
-  const [
-    confirmToken,
-    { loading: tokenLoading, data: tokenData },
-  ] = useMutation<MutationResult>("/api/users/confirm");
+  const [enter, { loading, data, error }] =
+    useMutation<MutationResult>("/api/users/enter");
+  const [confirmToken, { loading: tokenLoading, data: tokenData }] =
+    useMutation<MutationResult>("/api/users/confirm");
   const { register, handleSubmit, reset } = useForm<EnterForm>();
-  const { register: tokenRegister, handleSubmit: tokenHandleSubmit } = useForm<
-    TokenForm
-  >();
+  const { register: tokenRegister, handleSubmit: tokenHandleSubmit } =
+    useForm<TokenForm>();
   const [method, setMethod] = useState<"email" | "phone">("email");
   const onEmailClick = () => {
     reset();
@@ -122,14 +118,16 @@ const Enter: NextPage = () => {
                 />
               ) : null}
               {method === "phone" ? (
-                <Input
-                  register={register("phone")}
-                  name="phone"
-                  label="Phone number"
-                  type="string"
-                  kind="phone"
-                  required
-                />
+                <>
+                  <Input
+                    register={register("phone")}
+                    name="phone"
+                    label="Phone number"
+                    type="number"
+                    kind="phone"
+                    required
+                  />
+                </>
               ) : null}
               {method === "email" ? (
                 <Button text={loading ? "Loading" : "Get login link"} />
