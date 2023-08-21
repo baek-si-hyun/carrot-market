@@ -24,9 +24,8 @@ interface UploadProductMutation {
 const Upload: NextPage = () => {
   const router = useRouter();
   const { register, handleSubmit, watch } = useForm<UploadProductForm>();
-  const [uploadProduct, { loading, data }] = useMutation<UploadProductMutation>(
-    "/api/products"
-  );
+  const [uploadProduct, { loading, data }] =
+    useMutation<UploadProductMutation>("/api/products");
   const onValid = async ({ name, price, description }: UploadProductForm) => {
     if (loading) return;
     if (photo && photo.length > 0) {
@@ -114,4 +113,5 @@ const Upload: NextPage = () => {
     </Layout>
   );
 };
+
 export default Upload;
