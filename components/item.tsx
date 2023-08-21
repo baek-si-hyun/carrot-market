@@ -4,15 +4,19 @@ interface ItemProps {
   id: number;
   price: number;
   hearts: number;
+  image: string;
 }
-export default function Item({ title, price, hearts, id }: ItemProps) {
+export default function Item({ title, price, hearts, id, image }: ItemProps) {
   return (
     <Link
       href={`/products/${id}`}
       className="flex justify-between px-4 pt-5 cursor-pointer"
     >
       <div className="flex space-x-4">
-        <div className="w-20 h-20 bg-gray-400 rounded-md" />
+        <img
+          src={`https://imagedelivery.net/4aEUbX05h6IovGOQjgkfSw/${image}/public`}
+          className="h-96 bg-slate-300"
+        />
         <div className="flex flex-col pt-2">
           <h3 className="text-sm font-medium text-gray-900">{title}</h3>
           <span className="mt-1 font-medium text-gray-900">${price}</span>
