@@ -3,7 +3,7 @@ import Layout from "@/components/layout";
 import Message from "@/components/message";
 import useSWR from "swr";
 import { useRouter } from "next/router";
-import { Stream } from "@prisma/client";
+import { Stream as PrismaStream } from "@prisma/client";
 import { useForm } from "react-hook-form";
 import useMutation from "@/libs/client/useMutation";
 import useUser from "@/libs/client/useUser";
@@ -18,7 +18,7 @@ interface StreamMessage {
   };
 }
 
-interface StreamWithMessages extends Stream {
+interface StreamWithMessages extends PrismaStream {
   messages: StreamMessage[];
 }
 interface StreamResponse {
