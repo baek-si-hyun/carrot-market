@@ -26,9 +26,9 @@ async function handler(
       },
     },
   });
-  if (phone) 
-  if (email)   
+
   return res.json({
+    payload: payload,
     ok: true,
   });
 }

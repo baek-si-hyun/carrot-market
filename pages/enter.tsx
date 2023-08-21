@@ -18,16 +18,21 @@ interface TokenForm {
 
 interface MutationResult {
   ok: boolean;
+  payload: string;
 }
 
 const Enter: NextPage = () => {
-  const [enter, { loading, data, error }] =
-    useMutation<MutationResult>("/api/users/enter");
-  const [confirmToken, { loading: tokenLoading, data: tokenData }] =
-    useMutation<MutationResult>("/api/users/confirm");
+  const [enter, { loading, data, error }] = useMutation<MutationResult>(
+    "/api/users/enter"
+  );
+  const [
+    confirmToken,
+    { loading: tokenLoading, data: tokenData },
+  ] = useMutation<MutationResult>("/api/users/confirm");
   const { register, handleSubmit, reset } = useForm<EnterForm>();
-  const { register: tokenRegister, handleSubmit: tokenHandleSubmit } =
-    useForm<TokenForm>();
+  const { register: tokenRegister, handleSubmit: tokenHandleSubmit } = useForm<
+    TokenForm
+  >();
   const [method, setMethod] = useState<"email" | "phone">("email");
   const onEmailClick = () => {
     reset();
@@ -69,6 +74,7 @@ const Enter: NextPage = () => {
               type="number"
               required
             />
+            <span>token : {data.payload}</span>
             <Button text={tokenLoading ? "Loading" : "Confirm Token"} />
           </form>
         ) : (
