@@ -2,13 +2,13 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import FloatingButton from "@/components/floating-button";
 import Layout from "@/components/layout";
-import { Stream } from "@prisma/client";
+import { Stream as PrismaStream } from "@prisma/client";
 import useSWR from "swr";
 import Image from "next/image";
 
 interface StreamsResponse {
   ok: boolean;
-  streams: Stream[];
+  streams: PrismaStream[];
 }
 const Streams: NextPage = () => {
   const { data } = useSWR<StreamsResponse>(`/api/streams?page=3`);
