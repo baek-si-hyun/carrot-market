@@ -74,7 +74,11 @@ const Enter: NextPage = () => {
               type="number"
               required
             />
-            <span>token : {data.payload}</span>
+            <span>
+              이메일 인증과 문자 인증은 과금으로 인해 노출 형식으로 대체합니다
+              <br />
+              token : {data.payload}
+            </span>
             <Button text={tokenLoading ? "Loading" : "Confirm Token"} />
           </form>
         ) : (
