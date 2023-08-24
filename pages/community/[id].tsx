@@ -13,6 +13,7 @@ import { useEffect } from "react";
 interface AnswerWithUser extends Answer {
   user: User;
 }
+
 interface PostWithUser extends Post {
   user: User;
   _count: {
@@ -21,6 +22,7 @@ interface PostWithUser extends Post {
   };
   answers: AnswerWithUser[];
 }
+
 interface CommunityPostResponse {
   ok: boolean;
   post: PostWithUser;
@@ -42,11 +44,14 @@ const CommunityPostDetail: NextPage = () => {
   const { data, mutate } = useSWR<CommunityPostResponse>(
     router.query.id ? `/api/posts/${router.query.id}` : null
   );
+  console.log(data);
   const [wonder, { loading }] = useMutation(
     `/api/posts/${router.query.id}/wonder`
   );
-  const [sendAnswer, { data: answerData, loading: answerLoading }] =
-    useMutation<AnswerResponse>(`/api/posts/${router.query.id}/answers`);
+  const [
+    sendAnswer,
+    { data: answerData, loading: answerLoading },
+  ] = useMutation<AnswerResponse>(`/api/posts/${router.query.id}/answers`);
   const onWonderClick = () => {
     if (!data) return;
     mutate(
@@ -79,6 +84,31 @@ const CommunityPostDetail: NextPage = () => {
       mutate();
     }
   }, [answerData, reset, mutate]);
+
+  const timeForToday = (value: Date | undefined) => {
+    const today = new Date();
+    const timeValue = new Date(value!);
+
+    const betweenTime = Math.floor(
+      (today.getTime() - timeValue.getTime()) / 1000 / 60
+    );
+    if (betweenTime < 1) return "방금전";
+    if (betweenTime < 60) {
+      return `${betweenTime}분전`;
+    }
+
+    const betweenTimeHour = Math.floor(betweenTime / 60);
+    if (betweenTimeHour < 24) {
+      return `${betweenTimeHour}시간전`;
+    }
+
+    const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
+    if (betweenTimeDay < 365) {
+      return `${betweenTimeDay}일전`;
+    }
+
+    return `${Math.floor(betweenTimeDay / 365)}년전`;
+  };
   return (
     <Layout canGoBack>
       <div>
@@ -86,16 +116,20 @@ const CommunityPostDetail: NextPage = () => {
           동네질문
         </span>
         <div className="flex items-center px-4 pb-3 mb-3 space-x-3 border-b cursor-pointer">
-          <div className="w-10 h-10 rounded-full bg-slate-300" />
+          <Link href={`/users/profiles/${data?.post?.user?.id}`}>
+            <img
+              src={`https://imagedelivery.net/4aEUbX05h6IovGOQjgkfSw/${data?.post.user.avatar}/avatar`}
+              className="w-10 h-10 rounded-full bg-slate-300"
+            />
+          </Link>
+
           <div>
             <p className="text-sm font-medium text-gray-700">
               {data?.post?.user?.name}
             </p>
-            <Link href={`/users/profiles/${data?.post?.user?.id}`}>
-              <a className="text-xs font-medium text-gray-500">
-                View profile &rarr;
-              </a>
-            </Link>
+            <span className="text-xs font-medium text-gray-500">
+              {timeForToday(data?.post?.createdAt)}
+            </span>
           </div>
         </div>
         <div>
@@ -149,13 +183,16 @@ const CommunityPostDetail: NextPage = () => {
         <div className="px-4 my-5 space-y-5">
           {data?.post?.answers?.map((answer) => (
             <div key={answer.id} className="flex items-start space-x-3">
-              <div className="w-8 h-8 rounded-full bg-slate-200" />
+              <img
+                src={`https://imagedelivery.net/4aEUbX05h6IovGOQjgkfSw/${answer.user.avatar}/avatar`}
+                className="w-8 h-8 rounded-full bg-slate-200"
+              />
               <div>
                 <span className="block text-sm font-medium text-gray-700">
                   {answer.user.name}
                 </span>
                 <span className="block text-xs text-gray-500 ">
-                  {String(answer.createdAt)}
+                  {timeForToday(answer.createdAt)}
                 </span>
                 <p className="mt-2 text-gray-700">{answer.answer} </p>
               </div>
@@ -177,4 +214,5 @@ const CommunityPostDetail: NextPage = () => {
     </Layout>
   );
 };
+
 export default CommunityPostDetail;

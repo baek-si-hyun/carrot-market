@@ -21,11 +21,10 @@ interface ProductsResponse {
 const Home: NextPage = () => {
   const { user, isLoading } = useUser();
   const { data } = useSWR<ProductsResponse>("/api/products");
-  console.log(user);
   const router = useRouter();
   useEffect(() => {
     if (!isLoading && !user) {
-      router.push("/enter"); // Redirect to /enter if user is not available
+      router.push("/enter"); 
     }
   }, [isLoading, user, router]);
   return (
