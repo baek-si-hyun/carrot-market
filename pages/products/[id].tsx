@@ -29,19 +29,29 @@ const ItemDetail: NextPage = () => {
     boundMutate((prev) => prev && { ...prev, isLiked: !prev.isLiked }, false);
     toggleFav({});
   };
+  const [chatRoom, { data: chatRoomData }] = useMutation(`/api/chats`);
+  const talkToSellerClick = () => {
+    chatRoom({});
+    // router.push(`/chat/${router.query.id}`);
+  };
+
   return (
     <Layout canGoBack>
       <div className="px-4 py-4">
         <div className="mb-8">
-          <img
-            src={`https://imagedelivery.net/4aEUbX05h6IovGOQjgkfSw/${data?.product.image}/public`}
-            className="object-cover w-full h-full bg-slate-300"
-          />
-          <div className="flex items-center py-3 space-x-3 border-t border-b cursor-pointer">
+          {data?.product && (
             <img
-              src={`https://imagedelivery.net/4aEUbX05h6IovGOQjgkfSw/${data?.product?.user?.avatar}/avatar`}
-              className="w-12 h-12 rounded-full bg-slate-300"
+              src={`https://imagedelivery.net/4aEUbX05h6IovGOQjgkfSw/${data.product.image}/public`}
+              className="object-cover w-full h-full bg-slate-300"
             />
+          )}
+          <div className="flex items-center py-3 space-x-3 border-t border-b cursor-pointer">
+            {data?.product.user.avatar && (
+              <img
+                src={`https://imagedelivery.net/4aEUbX05h6IovGOQjgkfSw/${data?.product?.user?.avatar}/avatar`}
+                className="w-12 h-12 rounded-full bg-slate-300"
+              />
+            )}
             <div>
               <p className="text-sm font-medium text-gray-700">
                 {data?.product?.user?.name}
@@ -63,7 +73,12 @@ const ItemDetail: NextPage = () => {
             </span>
             <p className="my-6 text-gray-700 ">{data?.product?.description}</p>
             <div className="flex items-center justify-between space-x-2">
-              <Button large text="Talk to seller" />
+              <button
+                onClick={talkToSellerClick}
+                className="w-full px-4 py-2 text-sm font-medium text-white bg-orange-500 border border-transparent rounded-md shadow-sm hover:bg-orange-600 focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 focus:outline-none"
+              >
+                Talk to seller
+              </button>
               <button
                 onClick={onFavClick}
                 className={cls(
