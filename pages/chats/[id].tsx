@@ -15,16 +15,15 @@ interface ChatRoomWithMessages extends ChatRoom {
   host: User;
   invited: User;
 }
+
 const ChatDetail: NextPage = () => {
   const router = useRouter();
   const { register, handleSubmit, watch, reset } = useForm<UploadChatForm>();
-  console.log(watch());
   const [sendChat, { loading, data }] = useMutation(
     `/api/chats/${router.query.id}/chat`
   );
   const onVaild = ({ chat }: UploadChatForm) => {
     sendChat({ chat: chat });
-    console.log(chat)
   };
 
   return (

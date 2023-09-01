@@ -8,7 +8,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     session: { user },
     body,
   } = req;
-  console.log(id, user, body);
 }
 
 export default withApiSession(

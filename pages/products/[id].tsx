@@ -7,6 +7,7 @@ import Link from "next/link";
 import { Product, User } from "@prisma/client";
 import useMutation from "@/libs/client/useMutation";
 import { cls } from "@/libs/client/utils";
+import { useEffect } from "react";
 
 interface ProductWithUser extends Product {
   user: User;
@@ -20,44 +21,50 @@ interface ItemDetailResponse {
 
 const ItemDetail: NextPage = () => {
   const router = useRouter();
-  const { data, mutate: boundMutate } = useSWR<ItemDetailResponse>(
+  const { data: productData, mutate: boundMutate } = useSWR<ItemDetailResponse>(
     router.query.id ? `/api/products/${router.query.id}` : null
   );
   const [toggleFav] = useMutation(`/api/products/${router.query.id}/fav`);
   const onFavClick = () => {
-    if (!data) return;
+    if (!productData) return;
     boundMutate((prev) => prev && { ...prev, isLiked: !prev.isLiked }, false);
     toggleFav({});
   };
-  const [chatRoom, { data: chatRoomData }] = useMutation(`/api/chats`);
+  const [chatRoom, { data: chatRoomData, loading }] = useMutation(
+    `/api/chats?productId=${productData?.product.id}&guestId=${productData?.product.user.id}`
+  );
   const talkToSellerClick = () => {
+    if (loading) return;
     chatRoom({});
-    // router.push(`/chat/${router.query.id}`);
   };
-
+  useEffect(() => {
+    if (chatRoomData && chatRoomData.ok) {
+      router.push(`/chats/${chatRoomData.chatRoomId}`);
+    }
+  }, [chatRoomData, router]);
   return (
     <Layout canGoBack>
       <div className="px-4 py-4">
         <div className="mb-8">
-          {data?.product && (
+          {productData?.product && (
             <img
-              src={`https://imagedelivery.net/4aEUbX05h6IovGOQjgkfSw/${data.product.image}/public`}
+              src={`https://imagedelivery.net/4aEUbX05h6IovGOQjgkfSw/${productData.product.image}/public`}
               className="object-cover w-full h-full bg-slate-300"
             />
           )}
           <div className="flex items-center py-3 space-x-3 border-t border-b cursor-pointer">
-            {data?.product.user.avatar && (
+            {productData?.product.user.avatar && (
               <img
-                src={`https://imagedelivery.net/4aEUbX05h6IovGOQjgkfSw/${data?.product?.user?.avatar}/avatar`}
+                src={`https://imagedelivery.net/4aEUbX05h6IovGOQjgkfSw/${productData?.product?.user?.avatar}/avatar`}
                 className="w-12 h-12 rounded-full bg-slate-300"
               />
             )}
             <div>
               <p className="text-sm font-medium text-gray-700">
-                {data?.product?.user?.name}
+                {productData?.product?.user?.name}
               </p>
               <Link
-                href={`/users/profiles/${data?.product?.user?.id}`}
+                href={`/users/profiles/${productData?.product?.user?.id}`}
                 className="text-xs font-medium text-gray-500"
               >
                 View profile &rarr;
@@ -66,12 +73,14 @@ const ItemDetail: NextPage = () => {
           </div>
           <div className="mt-5">
             <h1 className="text-3xl font-bold text-gray-900">
-              {data?.product?.name}
+              {productData?.product?.name}
             </h1>
             <span className="block mt-3 text-2xl text-gray-900">
-              ${data?.product?.price}
+              ${productData?.product?.price}
             </span>
-            <p className="my-6 text-gray-700 ">{data?.product?.description}</p>
+            <p className="my-6 text-gray-700 ">
+              {productData?.product?.description}
+            </p>
             <div className="flex items-center justify-between space-x-2">
               <button
                 onClick={talkToSellerClick}
@@ -83,12 +92,12 @@ const ItemDetail: NextPage = () => {
                 onClick={onFavClick}
                 className={cls(
                   "p-3 rounded-md flex items-center hover:bg-gray-100 justify-center ",
-                  data?.isLiked
+                  productData?.isLiked
                     ? "text-red-500  hover:text-red-600"
                     : "text-gray-400  hover:text-gray-500"
                 )}
               >
-                {data?.isLiked ? (
+                {productData?.isLiked ? (
                   <svg
                     className="w-6 h-6"
                     fill="currentColor"
@@ -125,7 +134,7 @@ const ItemDetail: NextPage = () => {
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Similar items</h2>
           <div className="grid grid-cols-2 gap-4 mt-6 ">
-            {data?.relatedProducts?.map((product) => (
+            {productData?.relatedProducts?.map((product) => (
               <div key={product.id}>
                 <img
                   src={`https://imagedelivery.net/4aEUbX05h6IovGOQjgkfSw/${product.image}/public`}
