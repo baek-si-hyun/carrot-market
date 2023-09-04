@@ -4,7 +4,7 @@ import { cls } from "@/libs/client/utils";
 interface MessageProps {
   message: string;
   name?: string;
-  avatarUrl?: string;
+  avatarUrl?: string | null;
   userId?: number;
 }
 
