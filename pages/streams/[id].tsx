@@ -108,7 +108,6 @@ const Stream: NextPage = () => {
               <Message
                 key={message.id}
                 message={message.message}
-                // reversed={message.user.id === user?.id}
               />
             ))}
           </div>
