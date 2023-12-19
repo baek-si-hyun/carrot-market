@@ -16,6 +16,8 @@ export default function Item({ title, price, hearts, id, image }: ItemProps) {
         <img
           src={`https://imagedelivery.net/4aEUbX05h6IovGOQjgkfSw/${image}/public`}
           className="w-20 h-20 bg-gray-400 rounded-md"
+          loading="lazy"
+          decoding="async"
         />
         <div className="flex flex-col pt-2">
           <h3 className="text-sm font-medium text-gray-900">{title}</h3>

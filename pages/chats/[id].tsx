@@ -17,7 +17,7 @@ interface ChatRoomWithMessages extends ChatRoom {
   host: User;
   guest: User;
 }
-interface asdasds {
+interface ResponseChatMessage {
   ok: boolean;
   chatMessage: ChatRoomWithMessages;
 }
@@ -28,8 +28,8 @@ const ChatDetail: NextPage = () => {
   const [sendChat, { loading }] = useMutation(
     `/api/chats/${router.query.id}/chat`
   );
-  const [chatData, setChatData] = useState<asdasds>()
-  const { data: fetchChatData, mutate } = useSWR<asdasds>(
+  const [chatData, setChatData] = useState<ResponseChatMessage>();
+  const { data: fetchChatData, mutate } = useSWR<ResponseChatMessage>(
     `/api/chats/${router.query.id}`
   );
   const onVaild = ({ chat }: UploadChatForm) => {
@@ -71,9 +71,9 @@ const ChatDetail: NextPage = () => {
               : chatData.chatMessage.guest.name
           }
         >
-          <div className="px-4 py-10 pb-16 space-y-4">
+          <div className="h-[clac(100vh-64px)] px-4 py-10 pb-16 space-y-4">
             <form
-              className="fixed inset-x-0 bottom-0 py-2 bg-white"
+              className="h-full py-2 bg-white"
               onSubmit={handleSubmit(onVaild)}
             >
               <>
@@ -95,7 +95,7 @@ const ChatDetail: NextPage = () => {
                   />
                 ))}
               </>
-              <div className="relative flex items-center w-full max-w-md mx-auto">
+              <div className="absolute inset-x-0 flex items-center max-w-md mx-auto bottom-2">
                 <input
                   type="text"
                   {...register("chat", { required: true })}
